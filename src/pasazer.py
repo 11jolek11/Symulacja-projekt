@@ -44,6 +44,7 @@ class Pasazer:
         self.siad_cz = self.__whileNormal__(self.siad_sr, self.siad_od)
 
         self.pozycja = pozycja
+        self.stan = "temp"
         self.miejsce = miejsce
         self.czas_akcji = 0
 

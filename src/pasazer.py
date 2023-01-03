@@ -27,6 +27,7 @@ class Pasazer:
         :param float pozycja: Pozycja podana jako dystans od początku samolotu
         :param int miejsce: Określa przydzielone miejsce w samolocie danego pasażera
         """
+        # TODO: dodać oddziaływanie na warunki pogodowe
         self.id = 0
         self.const_id = 0
         self.chod_sr = chod_sr
@@ -53,15 +54,14 @@ class Pasazer:
 
         self._stan = "chodzi"
 
-
-
-
         self.miejsce = miejsce
         self.czas_akcji = 0
+        # TODO: doc
         self.czas_zakonczenia_akcji = 0
 
         self.dyst_do_rzedu()
 
+    # TODO: doc
     @property
     def stan(self):
         return self._stan

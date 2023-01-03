@@ -27,9 +27,12 @@ class Pasazer:
         :param float pozycja: Pozycja podana jako dystans od początku samolotu
         :param int miejsce: Określa przydzielone miejsce w samolocie danego pasażera
         """
+        self.id = 0
+        self.const_id = 0
         self.chod_sr = chod_sr
         self.chod_od = 0.3
         self.chod_pr = self.__whileNormal__(self.chod_sr, self.chod_od)
+        self.chod_aktualna = self.chod_pr
 
         self.wstw_sr = wstw_sr
         self.wstw_od = 2
@@ -43,12 +46,30 @@ class Pasazer:
         self.siad_od = 1
         self.siad_cz = self.__whileNormal__(self.siad_sr, self.siad_od)
 
+        # pozycj po wejściu do samolotu pozycja staje się ujemna
         self.pozycja = pozycja
-        self.stan = "temp"
+        self.pozycja_od_rzedu = 0 
+        self.stan = "chodzi"
         self.miejsce = miejsce
         self.czas_akcji = 0
+        self.czas_zakonczenia_akcji = 0
+
+        self.dyst_do_rzedu()
 
     def __whileNormal__(self, srednia, odchylenie, zmienna=-1):
         while zmienna < 0:
             zmienna = normal(srednia, odchylenie)
         return zmienna
+
+    def dyst_do_rzedu(self, siedzen_w_rzedzie=6):
+        """
+        Funkcja obliczająca odległość rzędu dla danego miejsca od wejścia
+        do samolotu.
+        """
+        # TODO: przystosować do ułożeniam iejsc w samolocie
+        a = 0.3
+        b = 0.5
+
+        nr_rzedu = (self.miejsce//siedzen_w_rzedzie) + 1
+        # return 70-(nr_rzedu*(a+b)) + self.pozycja
+        self.pozycja_od_rzedu = 70-(nr_rzedu*(a+b)) + self.pozycja

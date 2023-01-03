@@ -1,5 +1,5 @@
 import numpy as np
-
+from pasazer import Pasazer
 
 class Miejsca:
     """
@@ -38,14 +38,14 @@ class Miejsca:
         position = (seat - 1) // 3
         return row_num - 1, position, (seat - 1) % 3
 
-    def sit_at(self, seat: int, passenger) -> float:
+    def sit_at(self, passenger:Pasazer) -> float:
+        # TODO: Zmien tak aby pasazer siadal na swoim miejscu
         """
         Metoda odpowiedzialna za zajęcie miejsca przez pasażera
-
-        :param seat: numer miejsca, przydzielonego do pasażera
         :param passenger: instancja pasażera, który ma zająć miejsce
         :return: czas w jakim pasażer stoi na korytarzu
         """
+        seat = passenger.miejsce
         action_time = 0
         row_num, position, seat_idx = self.get_seat_idx(seat)
         row: np.ndarray = self.seats[row_num][position]

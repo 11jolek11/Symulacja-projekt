@@ -68,7 +68,7 @@ class Pasazer:
 
     @stan.setter
     def stan(self, new_stan):
-        print(f'Zmaiana stanu pasazera {self.const_id} na wartosc {new_stan}')
+        # print(f'Zmaiana stanu pasazera {self.const_id} na wartosc {new_stan}')
         self._stan = new_stan
 
     def __whileNormal__(self, srednia, odchylenie, zmienna=-1):

@@ -48,13 +48,28 @@ class Pasazer:
 
         # pozycj po wejściu do samolotu pozycja staje się ujemna
         self.pozycja = pozycja
-        self.pozycja_od_rzedu = 0 
-        self.stan = "chodzi"
+        self.pozycja_od_rzedu = 0
+
+
+        self._stan = "chodzi"
+
+
+
+
         self.miejsce = miejsce
         self.czas_akcji = 0
         self.czas_zakonczenia_akcji = 0
 
         self.dyst_do_rzedu()
+
+    @property
+    def stan(self):
+        return self._stan
+
+    @stan.setter
+    def stan(self, new_stan):
+        print(f'Zmaiana stanu pasazera {self.const_id} na wartosc {new_stan}')
+        self._stan = new_stan
 
     def __whileNormal__(self, srednia, odchylenie, zmienna=-1):
         while zmienna < 0:

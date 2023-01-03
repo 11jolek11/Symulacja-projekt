@@ -1,6 +1,7 @@
 from kolejki import *
 from pasazer import Pasazer
 from miejsca import Miejsca
+import os
 
 # TODO: interakcję pomiędzy pasazerami (czeka na ruch)
 
@@ -46,7 +47,7 @@ def cz_wszyscy_siedza(kolejka: list[Pasazer]) -> bool:
 def korytarz(kolejka: list[Pasazer]):
     a = 0.3
     b = 0.5
-    delta_t = 0.1
+    delta_t = 1
 
     rzedy = Miejsca()
 
@@ -65,7 +66,7 @@ def korytarz(kolejka: list[Pasazer]):
             if pasazer.stan == siada and pasazer.czas_zakonczenia_akcji <= time_pass \
                 and pasazer.czas_zakonczenia_akcji != 0:
                 pasazer.stan  = siedzi
-                print("Siedzi - " + str(pasazer.const_id))
+                # print("Siedzi - " + str(pasazer.const_id))
                 temp = pasazer.id
                 pasazer.id = -1
                 kolejka[temp+1].id = temp
@@ -75,15 +76,15 @@ def korytarz(kolejka: list[Pasazer]):
                 and pasazer.czas_zakonczenia_akcji != 0:
                 pasazer.stan  = chodzi
 
-            # FIXME: siada nieskończoną ilość razy
-            if pasazer.pozycja_od_rzedu <= 0 and pasazer.stan != siada:
+            if pasazer.pozycja_od_rzedu <= 0 and pasazer.stan == chodzi:
                 pasazer.chod_aktualna = 0
                 pasazer.stan = siada
                 pasazer.czas_zakonczenia_akcji = rzedy.sit_at(pasazer) + time_pass
 
             if pasazer.id != kolejka[-1].id:
-                if pasazer.id < kolejka[pasazer.id+1].id:
+                if pasazer.id < kolejka[pasazer.id+1].id and (pasazer.stan == stoi or pasazer.stan == siada):
                     kolejka[pasazer.id+1].stan = stoi
+                    kolejka[pasazer.id+1].czas_zakonczenia_akcji = pasazer.czas_zakonczenia_akcji
                     kolejka[pasazer.id+1].chod_aktualna = pasazer.chod_aktualna
             # TODO: implementacja wypadkow
         time_pass += delta_t

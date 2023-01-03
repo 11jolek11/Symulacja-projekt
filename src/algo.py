@@ -68,8 +68,6 @@ def korytarz(kolejka_in: list[Pasazer]):
         # print(cz_wszyscy_siedza(kolejka))
         loop += 1
         for pasazer in kolejka:
-            pasazer.pozycja += delta_t*pasazer.chod_aktualna*(-1)
-            pasazer.pozycja_od_rzedu += delta_t*pasazer.chod_aktualna*(-1)
 
             if pasazer.id != kolejka[-1].id: 
                 if pasazer.stan == siada and pasazer.czas_zakonczenia_akcji <= time_pass \
@@ -84,6 +82,9 @@ def korytarz(kolejka_in: list[Pasazer]):
             if kolejka[-1].stan == siada and kolejka[-1].czas_zakonczenia_akcji <= time_pass \
                 and kolejka[-1].czas_zakonczenia_akcji != 0:
                 kolejka[-1].stan = siedzi
+            
+            pasazer.pozycja += delta_t*pasazer.chod_aktualna*(-1)
+            pasazer.pozycja_od_rzedu += delta_t*pasazer.chod_aktualna*(-1)
 
             if pasazer.stan == stoi and pasazer.czas_zakonczenia_akcji <= time_pass \
                 and pasazer.czas_zakonczenia_akcji != 0:

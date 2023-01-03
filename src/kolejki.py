@@ -53,6 +53,9 @@ def PlaceFirst(ilosc, chod_sr, wstw_sr):
     for i in range(ilosc):
         odstep = uniform(0.3, 0.8)
         # dystans += odstep
+        if i==0:
+            dystans += odstep
+            pasazerowie.append(Pasazer(chod_sr, wstw_sr, dystans, miejsca[i]))
         dystans = 0
         dystans += pasazerowie[-1].pozycja + odstep
         pasazerowie.append(Pasazer(chod_sr, wstw_sr, dystans, miejsca[i]))
@@ -84,6 +87,9 @@ def WindowFirst(ilosc, chod_sr, wstw_sr):
     for i in range(ilosc):
         odstep = uniform(0.3, 0.8)
         # dystans += odstep
+        if i==0:
+            dystans += odstep
+            pasazerowie.append(Pasazer(chod_sr, wstw_sr, dystans, miejsca[i]))
         dystans = 0
         dystans += pasazerowie[-1].pozycja + odstep
         pasazerowie.append(Pasazer(chod_sr, wstw_sr, dystans, sortowane_miejsca[i]))
@@ -112,6 +118,9 @@ def RowFirst(ilosc, chod_sr, wstw_sr):
     for i in range(ilosc):
         odstep = uniform(0.3, 0.8)
         # dystans += odstep
+        if i==0:
+            dystans += odstep
+            pasazerowie.append(Pasazer(chod_sr, wstw_sr, dystans, miejsca[i]))
         dystans = 0
         dystans += pasazerowie[-1].pozycja + odstep
         pasazerowie.append(Pasazer(chod_sr, wstw_sr, dystans, sortowane_miejsca[i]))
@@ -142,8 +151,43 @@ def BestFirst(ilosc, chod_sr, wstw_sr):
     for i in range(ilosc):
         odstep = uniform(0.3, 0.8)
         # dystans += odstep
+        if i==0:
+            dystans += odstep
+            pasazerowie.append(Pasazer(chod_sr, wstw_sr, dystans, miejsca[i]))
         dystans = 0
         dystans += pasazerowie[-1].pozycja + odstep
+        pasazerowie.append(Pasazer(chod_sr, wstw_sr, dystans, sortowane_miejsca[i]))
+    return pasazerowie
+
+def Pulse(ilosc, chod_sr, wstw_sr):
+    """
+    Kolejka zwracająca tablicę z pasażerami o wielkości ilosc w kolejności rzędu i miejsca od okna
+    :param int ilosc: Ilość pasażerów
+    :param int chod_sr: Średnia prędkość chodu pasażera w metrach na sekundę
+    :param int wstw_sr: Średni czas wstawania pasażera w sekundach
+    :return: Tablica pasażerów
+    :rtype: list
+    """
+    global const_miejsca, const_dystans
+    miejsca = arange(1, const_miejsca + 1, 1, dtype=int)
+    shuffle(miejsca)
+    miejsca = miejsca[:ilosc]
+    pasazerowie = []
+    dystans = const_dystans
+
+    m_temp, sortowane_miejsca = [[] for i in range(25)], []
+    for m in miejsca: m_temp[(m - 1) // 6].append(m)
+    temp_val = ilosc
+    while temp_val:
+        for i in range(25):
+            if len(m_temp[i]):
+                sortowane_miejsca.append(m_temp[i][0])
+                m_temp[i].pop(0)
+                temp_val -= 1
+
+    for i in range(ilosc):
+        odstep = uniform(0.3, 0.8)
+        dystans += odstep
         pasazerowie.append(Pasazer(chod_sr, wstw_sr, dystans, sortowane_miejsca[i]))
     return pasazerowie
 

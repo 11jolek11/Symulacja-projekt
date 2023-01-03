@@ -3,8 +3,11 @@ from pasazer import Pasazer
 from miejsca import Miejsca
 from algo import zapelnij_kolejke, korytarz
 import pandas as pd
-# import seaborn as sns
+import plotly.express as px
 # import matplotlib.pyplot as plt
+
+
+
 
 kolejka = zapelnij_kolejke(150, 9, 6, Fifo)
 
@@ -32,17 +35,21 @@ def simulations_stack():
 
 
 
-simulations_stack()
+# simulations_stack()
 
-df = pd.DataFrame(output_list).transpose()
-df.columns = ['queue','plane_capacity','avg_get_up_speed','avg_walking_speed','time']
+# df = pd.DataFrame(output_list).transpose()
+# df.columns = ['queue','plane_capacity','avg_get_up_speed','avg_walking_speed','time']
 
-df.to_excel("output.xls")
+# df.to_excel("output.xls")
 
 
-# df = pd.read_excel('output.xls')
+df = pd.read_excel('output.xls')
 
-# print(df)
+df = df.astype(str)
 
-# sns.pairplot(data = df, hue = 'time')
-# plt.show()
+# pd.options.plotting.backend = "plotly"
+
+# lista_1 = df.groupby("Id").agg(list)["queue"].to_list()
+
+fig = px.line(df, x = "Id", y="time",title="chuj")
+fig.show()

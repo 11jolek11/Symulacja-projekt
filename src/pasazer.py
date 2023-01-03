@@ -11,13 +11,16 @@ class Pasazer:
     :ivar siad_cz: Czas siadania danego pasażera określona z rozkładu normalnego (siad_sr, siad_od) w sekunadch
     :ivar rozp_cz: Czas rozpakowywania się danego pasażera określona z rozkładu normalnego (rozp_sr, rozp_od) w sekunadch
     :ivar stan: Określa aktualny stan danego pasażera
-    :ivar czas_akcji: Parametr służący do okreslenia ile jeszcze czasu zajmie danemu pasażerowi określona w stanie akcja
+    :ivar _stan: Określa aktualny stan danego pasażera (zmieniana prze property stan)
+    :ivar czas_zakonczenia_akcji: Parametr służący do okreslenia ile jeszcze czasu zajmie danemu pasażerowi określona w stanie akcja
+    :ivar id: Przypisany id pasazera ktorym manipulujemy
+    :ivar const_id: Stale przypisany id pasazera
     :type chod_pr: float
     :type wstw_cz: float
     :type siad_cz: float
     :type rozp_cz: float
     :type stan: basestring
-    :type czas_akcji: float
+    :type czas_zakonczenia_akcji: float
     """
 
     def __init__(self, chod_sr, wstw_sr, pozycja, miejsce):
@@ -47,44 +50,39 @@ class Pasazer:
         self.siad_od = 1
         self.siad_cz = self.__whileNormal__(self.siad_sr, self.siad_od)
 
-        # pozycj po wejściu do samolotu pozycja staje się ujemna
+        # po wejściu do samolotu pozycja staje się ujemna
         self.pozycja = pozycja
         self.pozycja_od_rzedu = 0
-
 
         self._stan = "chodzi"
 
         self.miejsce = miejsce
-        self.czas_akcji = 0
-        # TODO: doc
         self.czas_zakonczenia_akcji = 0
-
         self.dyst_do_rzedu()
 
-    # TODO: doc
+    # zmienilismy stan na property podczas debugowania i tak zostawiliśmy
     @property
     def stan(self):
         return self._stan
 
     @stan.setter
     def stan(self, new_stan):
-        # print(f'Zmaiana stanu pasazera {self.const_id} na wartosc {new_stan}')
         self._stan = new_stan
 
     def __whileNormal__(self, srednia, odchylenie, zmienna=-1):
         while zmienna < 0:
             zmienna = normal(srednia, odchylenie)
         return zmienna
-
     def dyst_do_rzedu(self, siedzen_w_rzedzie=6):
         """
         Funkcja obliczająca odległość rzędu dla danego miejsca od wejścia
         do samolotu.
+        :param siedzen_w_rzedzie: ilosc siedzen w rzedzie
         """
-        # TODO: przystosować do ułożeniam iejsc w samolocie
+        # Wymiar siedzenia i odstęp pomiędzy nimi
         a = 0.3
         b = 0.5
 
+        # Numerowanie rzędów zaczyna się od 0
         nr_rzedu = (self.miejsce//siedzen_w_rzedzie) + 1
-        # return 70-(nr_rzedu*(a+b)) + self.pozycja
         self.pozycja_od_rzedu = 70-(nr_rzedu*(a+b)) + self.pozycja

@@ -39,7 +39,6 @@ class Miejsca:
         return row_num - 1, position, (seat - 1) % 3
 
     def sit_at(self, passenger:Pasazer) -> float:
-        # TODO: Zmien tak aby pasazer siadal na swoim miejscu
         """
         Metoda odpowiedzialna za zajęcie miejsca przez pasażera
         :param passenger: instancja pasażera, który ma zająć miejsce

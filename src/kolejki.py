@@ -24,7 +24,8 @@ def Fifo(ilosc, chod_sr, wstw_sr):
 
     for i in range(ilosc):
         odstep = uniform(0.3, 0.8)
-
+        # Ten edit zapewnia, że każdy kolejny pasażer będzie stał (w sensie odległości od początku samolotu) 
+        # za następnym pasażerem
         if i==0:
             dystans += odstep
             pasazerowie.append(Pasazer(chod_sr, wstw_sr, dystans, miejsca[i]))
@@ -89,7 +90,7 @@ def WindowFirst(ilosc, chod_sr, wstw_sr):
         # dystans += odstep
         if i==0:
             dystans += odstep
-            pasazerowie.append(Pasazer(chod_sr, wstw_sr, dystans, miejsca[i]))
+            pasazerowie.append(Pasazer(chod_sr, wstw_sr, dystans, sortowane_miejsca[i]))
         dystans = 0
         dystans += pasazerowie[-1].pozycja + odstep
         pasazerowie.append(Pasazer(chod_sr, wstw_sr, dystans, sortowane_miejsca[i]))
@@ -120,7 +121,7 @@ def RowFirst(ilosc, chod_sr, wstw_sr):
         # dystans += odstep
         if i==0:
             dystans += odstep
-            pasazerowie.append(Pasazer(chod_sr, wstw_sr, dystans, miejsca[i]))
+            pasazerowie.append(Pasazer(chod_sr, wstw_sr, dystans, sortowane_miejsca[i]))
         dystans = 0
         dystans += pasazerowie[-1].pozycja + odstep
         pasazerowie.append(Pasazer(chod_sr, wstw_sr, dystans, sortowane_miejsca[i]))
@@ -153,7 +154,7 @@ def BestFirst(ilosc, chod_sr, wstw_sr):
         # dystans += odstep
         if i==0:
             dystans += odstep
-            pasazerowie.append(Pasazer(chod_sr, wstw_sr, dystans, miejsca[i]))
+            pasazerowie.append(Pasazer(chod_sr, wstw_sr, dystans, sortowane_miejsca[i]))
         dystans = 0
         dystans += pasazerowie[-1].pozycja + odstep
         pasazerowie.append(Pasazer(chod_sr, wstw_sr, dystans, sortowane_miejsca[i]))
@@ -187,7 +188,12 @@ def Pulse(ilosc, chod_sr, wstw_sr):
 
     for i in range(ilosc):
         odstep = uniform(0.3, 0.8)
-        dystans += odstep
+        # dystans += odstep
+        if i==0:
+            dystans += odstep
+            pasazerowie.append(Pasazer(chod_sr, wstw_sr, dystans, sortowane_miejsca[i]))
+        dystans = 0
+        dystans += pasazerowie[-1].pozycja + odstep
         pasazerowie.append(Pasazer(chod_sr, wstw_sr, dystans, sortowane_miejsca[i]))
     return pasazerowie
 

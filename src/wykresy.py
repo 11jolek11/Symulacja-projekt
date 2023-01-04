@@ -44,9 +44,21 @@ def simulate_and_drop_to_excel(file_name):
             z+=1
     return None
 
-simulate_and_drop_to_excel("nowy")
+def take_from_excel_and_graph(file_name):
+    fifo_df = pd.read_excel(f"{file_name}.xlsx",sheet_name = "Fifo")
+    place_fist_df = pd.read_excel(f"{file_name}.xlsx",sheet_name = "PlaceFirst")
+    window_first_df = pd.read_excel(f"{file_name}.xlsx",sheet_name = "WindowFirst")
+    row_first_df = pd.read_excel(f"{file_name}.xlsx",sheet_name = "RowFirst")
+    best_first_df = pd.read_excel(f"{file_name}.xlsx",sheet_name = "BestFirst")
+    pulse_df = pd.read_excel(f"{file_name}.xlsx",sheet_name = "Pulse")
+    print(pulse_df)
 
+    pd.options.plotting.backend = "plotly"
+    fig = pulse_df.plot(y=["time","avg_walking_speed","avg_get_up_speed"])
+    fig.show()
+    return None
 
+take_from_excel_and_graph("nowy")
 
 
 # df = pd.read_excel('output.xls')

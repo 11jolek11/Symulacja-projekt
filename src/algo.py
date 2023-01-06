@@ -91,9 +91,12 @@ def korytarz(kolejka_in: list[Pasazer]):
                     pasazer.stan  = siedzi
                     temp = pasazer.id
                     # pasazer.id = -1
-                    pasazer.id = None
-                    if temp != None:
-                        kolejka[temp+1].id = temp
+                    kolejka.pop(pasazer.const_id)
+                    for _ in range(len(kolejka)):
+                        kolejka[_].const_id = _
+                    # pasazer.id = None
+                    # if temp != None:
+                    #     kolejka[temp+1].id = temp
 
             # obsługa ostatniego pasażera kiedy skonczy siadać
             if kolejka[-1].stan == siada and kolejka[-1].czas_zakonczenia_akcji <= time_pass \
@@ -117,15 +120,13 @@ def korytarz(kolejka_in: list[Pasazer]):
                 pasazer.czas_zakonczenia_akcji = rzedy.sit_at(pasazer) + time_pass
 
             # omijamy overflow error
-            if pasazer.id != kolejka[-1].id:
-                if pasazer.id != None:
-                    if kolejka[pasazer.id+1].id != None:
-                        if pasazer.id < kolejka[pasazer.id+1].id and (pasazer.stan == stoi or pasazer.stan == siada) and 0.2 > (pasazer.pozycja - kolejka[pasazer.id+1].pozycja):
+            if pasazer.const_id != kolejka[-1].const_id:
+                        if pasazer.const_id < kolejka[pasazer.const_id+1].id and (pasazer.stan == stoi or pasazer.stan == siada) and 0.2 > (pasazer.pozycja - kolejka[pasazer.const_id+1].pozycja):
                             # pasazer stoi jesli pasazer przed nim stoi
                             # print("Stoi pasazer dziedziczny")
-                            kolejka[pasazer.id+1].stan = stoi
-                            kolejka[pasazer.id+1].czas_zakonczenia_akcji = pasazer.czas_zakonczenia_akcji
-                            kolejka[pasazer.id+1].chod_aktualna = pasazer.chod_aktualna
+                            kolejka[pasazer.const_id+1].stan = stoi
+                            kolejka[pasazer.const_id+1].czas_zakonczenia_akcji = pasazer.czas_zakonczenia_akcji
+                            kolejka[pasazer.const_id+1].chod_aktualna = pasazer.chod_aktualna
         time_pass += delta_t
     return time_pass
 

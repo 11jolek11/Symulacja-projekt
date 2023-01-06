@@ -58,7 +58,9 @@ def take_from_excel_and_graph(file_name):
     fig.show()
     return None
 
-take_from_excel_and_graph("nowy")
+
+# simulate_and_drop_to_excel("xd")
+take_from_excel_and_graph("xd")
 
 
 # df = pd.read_excel('output.xls')

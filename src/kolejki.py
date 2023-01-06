@@ -4,7 +4,6 @@ from numpy.random import shuffle
 from random import uniform
 
 const_miejsca = 150
-# 
 const_dystans = 70.0
 
 def Fifo(ilosc, chod_sr, wstw_sr):
@@ -24,14 +23,7 @@ def Fifo(ilosc, chod_sr, wstw_sr):
 
     for i in range(ilosc):
         odstep = uniform(0.3, 0.8)
-        # Ten edit zapewnia, że każdy kolejny pasażer będzie stał (w sensie odległości od początku samolotu) 
-        # za następnym pasażerem
-        if i==0:
-            dystans += odstep
-            pasazerowie.append(Pasazer(chod_sr, wstw_sr, dystans, miejsca[i]))
-        # dystans += odstep
-        dystans = 0
-        dystans += pasazerowie[-1].pozycja + odstep
+        dystans += odstep
         pasazerowie.append(Pasazer(chod_sr, wstw_sr, dystans, miejsca[i]))
     return pasazerowie
 
@@ -53,12 +45,7 @@ def PlaceFirst(ilosc, chod_sr, wstw_sr):
 
     for i in range(ilosc):
         odstep = uniform(0.3, 0.8)
-        # dystans += odstep
-        if i==0:
-            dystans += odstep
-            pasazerowie.append(Pasazer(chod_sr, wstw_sr, dystans, miejsca[i]))
-        dystans = 0
-        dystans += pasazerowie[-1].pozycja + odstep
+        dystans += odstep
         pasazerowie.append(Pasazer(chod_sr, wstw_sr, dystans, miejsca[i]))
     return pasazerowie
 
@@ -87,12 +74,7 @@ def WindowFirst(ilosc, chod_sr, wstw_sr):
 
     for i in range(ilosc):
         odstep = uniform(0.3, 0.8)
-        # dystans += odstep
-        if i==0:
-            dystans += odstep
-            pasazerowie.append(Pasazer(chod_sr, wstw_sr, dystans, sortowane_miejsca[i]))
-        dystans = 0
-        dystans += pasazerowie[-1].pozycja + odstep
+        dystans += odstep
         pasazerowie.append(Pasazer(chod_sr, wstw_sr, dystans, sortowane_miejsca[i]))
     return pasazerowie
 
@@ -118,12 +100,7 @@ def RowFirst(ilosc, chod_sr, wstw_sr):
 
     for i in range(ilosc):
         odstep = uniform(0.3, 0.8)
-        # dystans += odstep
-        if i==0:
-            dystans += odstep
-            pasazerowie.append(Pasazer(chod_sr, wstw_sr, dystans, sortowane_miejsca[i]))
-        dystans = 0
-        dystans += pasazerowie[-1].pozycja + odstep
+        dystans += odstep
         pasazerowie.append(Pasazer(chod_sr, wstw_sr, dystans, sortowane_miejsca[i]))
     return pasazerowie
 
@@ -151,14 +128,10 @@ def BestFirst(ilosc, chod_sr, wstw_sr):
 
     for i in range(ilosc):
         odstep = uniform(0.3, 0.8)
-        # dystans += odstep
-        if i==0:
-            dystans += odstep
-            pasazerowie.append(Pasazer(chod_sr, wstw_sr, dystans, sortowane_miejsca[i]))
-        dystans = 0
-        dystans += pasazerowie[-1].pozycja + odstep
+        dystans += odstep
         pasazerowie.append(Pasazer(chod_sr, wstw_sr, dystans, sortowane_miejsca[i]))
     return pasazerowie
+
 
 def Pulse(ilosc, chod_sr, wstw_sr):
     """
@@ -188,14 +161,6 @@ def Pulse(ilosc, chod_sr, wstw_sr):
 
     for i in range(ilosc):
         odstep = uniform(0.3, 0.8)
-        # dystans += odstep
-        if i==0:
-            dystans += odstep
-            pasazerowie.append(Pasazer(chod_sr, wstw_sr, dystans, sortowane_miejsca[i]))
-        dystans = 0
-        dystans += pasazerowie[-1].pozycja + odstep
+        dystans += odstep
         pasazerowie.append(Pasazer(chod_sr, wstw_sr, dystans, sortowane_miejsca[i]))
     return pasazerowie
-
-if __name__ == "__main__":
-    temp = Fifo(150, 9, 6)

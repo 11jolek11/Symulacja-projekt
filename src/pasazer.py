@@ -1,6 +1,8 @@
 from __future__ import annotations
 from numpy.random import normal
 from miejsca import Miejsca
+from numpy.random import poisson
+from random import random
 
 
 class Samolot:
@@ -30,7 +32,7 @@ class Pasazer(Samolot):
     """
     passengers: list[Pasazer] = []
 
-    def __init__(self, chod_sr, wstw_sr, pozycja, miejsce):
+    def __init__(self, chod_sr, wstw_sr, pozycja, miejsce, prob):
         """
         :param int chod_sr: Średnia prędkość chodu pasażera w metrach na sekundę
         :param int wstw_sr: Średni czas wstawania pasażera w sekundach
@@ -58,6 +60,8 @@ class Pasazer(Samolot):
         self.stan = "temp"
         self.czas_akcji = 0
 
+        self.prob = prob
+
         # zmiany
         # x_pos - pozycja w korytarzu samolotu
         self.x_pos = -self.pozycja
@@ -67,10 +71,23 @@ class Pasazer(Samolot):
         self.passengers.append(self)
         self.idx = self.passengers.index(self)
 
+    def zdarzyl_sie_wypadek(self):
+        """
+        Funckja decydująca o wypadku dla danego pasażera w danym czasie
+        : returns bool :
+        """
+        return self.prob >= random()
+
     def move(self, dt):
         """
         Metoda odpowiedzialna za ruch pasażera
         """
+
+        # if self.zdarzyl_sie_wypadek():
+        #     self.chod_pr = 0
+        #     self.stan = 'stoi'
+        #     self.czas_akcji += 30
+
         self.czas_akcji -= dt
         self.czas_akcji = max(self.czas_akcji, 0)
         if self.stan == 'siada':

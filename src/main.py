@@ -5,21 +5,34 @@ from PySide6.QtCore import Qt, QObject, Signal, Slot, QThread
 from PySide6.QtWidgets import QApplication, QMainWindow, QStyleOption, QStyle
 from PySide6.QtGui import QPaintEvent, QPainter, QPen, QBrush
 
-from kolejki import BestFirst, Fifo, PlaceFirst, WindowFirst, RowFirst  # type: ignore
+from kolejki import *  # type: ignore
 from pasazer import Pasazer
 
+from scipy.stats import poisson
+from random import random
+
+
+def zdarzyl_sie_wypadek(prob):
+    """
+    Funckja decydująca o wypadku dla danego pasażera w danym czasie
+    : returns bool :
+    """
+    return prob >= random()
 
 class Worker(QObject):
     data = Signal(list)
 
-    def __init__(self, dt: float = 0.5, interval: float = 0.005) -> None:
+    def __init__(self, dt: float = 0.5, interval: float = 0.005, strategy=Fifo) -> None:
         super(Worker, self).__init__()
         self.dt = dt
         self.interval = interval
+        self.strategy = strategy
 
     def simulate(self) -> None:
+        prob = poisson.pmf(k=1, mu=0.00017)
+
         time_elapsed = 0
-        passengers: list[Pasazer] = RowFirst(150, 1, 6)
+        passengers: list[Pasazer] = self.strategy(150, 1, 6, prob)
         # np.random.shuffle(Pasazer.passengers)
         # print(passengers)
         while passengers:
@@ -28,13 +41,17 @@ class Worker(QObject):
             time.sleep(self.interval)
             x_positions = []
             for passenger in passengers:
+                if zdarzyl_sie_wypadek(prob):
+                    passenger.stan = 'stoi'
+                    passenger.czas_akcji += 30
                 passenger.move(self.dt)
                 if passenger.stan == "siedzi":
                     passengers.remove(passenger)
                 x_positions.append([passenger.x_pos, 0])
             self.data.emit(passengers)
+            # print(time_elapsed)
         self.data.emit(passengers)
-        print(time_elapsed)
+        return time_elapsed
 
 
 class MainWindow(QMainWindow):
@@ -49,7 +66,7 @@ class MainWindow(QMainWindow):
         self.x_positions = []
         # symulacja
         self.thread = QThread()
-        self.worker = Worker(0.5, 0.01)
+        self.worker = Worker(0.5, 0.01, strategy=Fifo)
         self.worker.data.connect(self.update_positions)
         self.worker.moveToThread(self.thread)
         self.thread.started.connect(self.worker.simulate)  # type: ignore
@@ -87,11 +104,11 @@ class MainWindow(QMainWindow):
             #
             # 0.1m = 1 px, 1m = 10px
             x_pos = multiplier * x_pos
-            print(x_pos)
+            # print(x_pos)
             if x_pos < 0:
                 y_pos = height * 0.5 - abs(x_pos)
                 x_pos = shift * 0.5
-                print(y_pos)
+                # print(y_pos)
             else:
                 y_pos = height * 0.5
 
@@ -107,7 +124,9 @@ class MainWindow(QMainWindow):
 
 
 if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    window = MainWindow()
-    window.show()
-    sys.exit(app.exec())
+    test = Worker(0.5, 0.005, Pulse)
+    test.simulate()
+    # app = QApplication(sys.argv)
+    # window = MainWindow()
+    # window.show()
+    # sys.exit(app.exec())

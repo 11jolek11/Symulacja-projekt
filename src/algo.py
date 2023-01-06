@@ -89,7 +89,8 @@ def korytarz(kolejka_in: list[Pasazer]):
                     # usadzamy pasazera kiedy skonczy siadać
                     pasazer.stan  = siedzi
                     temp = pasazer.id
-                    pasazer.id = -1
+                    # pasazer.id = -1
+                    pasazer.id = 5000
                     kolejka[temp+1].id = temp
 
             # obsługa ostatniego pasażera kiedy skonczy siadać
@@ -115,7 +116,7 @@ def korytarz(kolejka_in: list[Pasazer]):
 
             # omijamy overflow error
             if pasazer.id != kolejka[-1].id:
-                if pasazer.id < kolejka[pasazer.id+1].id and (pasazer.stan == stoi or pasazer.stan == siada):
+                if pasazer.id < kolejka[pasazer.id+1].id and (pasazer.stan == stoi or pasazer.stan == siada) and 0.2 > (pasazer.pozycja - kolejka[pasazer.id+1].pozycja):
                     # pasazer stoi jesli pasazer przed nim stoi
                     kolejka[pasazer.id+1].stan = stoi
                     kolejka[pasazer.id+1].czas_zakonczenia_akcji = pasazer.czas_zakonczenia_akcji

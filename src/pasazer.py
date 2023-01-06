@@ -65,7 +65,7 @@ class Pasazer(Samolot):
         # zmiany
         # x_pos - pozycja w korytarzu samolotu
         self.x_pos = -self.pozycja
-        print(self.x_pos)
+        # print(self.x_pos)
         self.seat_at = self.seat_pos(self.miejsce)  # x_pos na którym znajduje się miejsce pasażera
 
         self.passengers.append(self)

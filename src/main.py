@@ -22,20 +22,24 @@ def zdarzyl_sie_wypadek(prob):
 class Worker(QObject):
     data = Signal(list)
 
-    def __init__(self, dt: float = 0.5, interval: float = 0.005, strategy=Fifo) -> None:
+    def __init__(self,plane_capacity,avg_walking_speed,avg_get_up_speed, dt: float = 0.5, interval: float = 0.005, strategy=Fifo) -> None:
         super(Worker, self).__init__()
         self.dt = dt
         self.interval = interval
         self.strategy = strategy
+        self.plane_capacity = plane_capacity
+        self.avg_walking_speed = avg_walking_speed
+        self.avg_get_up_speed = avg_get_up_speed
 
     def simulate(self) -> None:
         prob = poisson.pmf(k=1, mu=0.00017)
 
         time_elapsed = 0
-        passengers: list[Pasazer] = self.strategy(150, 1, 6, prob)
+        passengers: list[Pasazer] = self.strategy(self.plane_capacity, self.avg_walking_speed, self.avg_get_up_speed, prob)
         # np.random.shuffle(Pasazer.passengers)
         # print(passengers)
         while passengers:
+            # print(len(passengers))
             time_elapsed += self.dt  # jezeli tutaj to reakcja pasazerow jest instant
             # jezli w for loop to pasazer ma swoj czas reakcji
             time.sleep(self.interval)
@@ -47,9 +51,11 @@ class Worker(QObject):
                 passenger.move(self.dt)
                 if passenger.stan == "siedzi":
                     passengers.remove(passenger)
+                    
                 x_positions.append([passenger.x_pos, 0])
             self.data.emit(passengers)
             # print(time_elapsed)
+
         self.data.emit(passengers)
         return time_elapsed
 
@@ -124,7 +130,7 @@ class MainWindow(QMainWindow):
 
 
 if __name__ == "__main__":
-    test = Worker(0.5, 0.005, Pulse)
+    test = Worker(150,1,6,0.5, 0.005, Pulse)
     test.simulate()
     # app = QApplication(sys.argv)
     # window = MainWindow()

@@ -80,6 +80,7 @@ def korytarz(kolejka_in: list[Pasazer]):
         for pasazer in kolejka:
             if zdarzyl_sie_wypadek():
                 # losujemy czy wydarzył się wypadek
+                # print("Paszer stoi z powodou wypadku")
                 pasazer.stan = stoi
                 pasazer.czas_zakonczenia_akcji = time_pass + 30.0
 
@@ -90,8 +91,9 @@ def korytarz(kolejka_in: list[Pasazer]):
                     pasazer.stan  = siedzi
                     temp = pasazer.id
                     # pasazer.id = -1
-                    pasazer.id = 5000
-                    kolejka[temp+1].id = temp
+                    pasazer.id = None
+                    if temp != None:
+                        kolejka[temp+1].id = temp
 
             # obsługa ostatniego pasażera kiedy skonczy siadać
             if kolejka[-1].stan == siada and kolejka[-1].czas_zakonczenia_akcji <= time_pass \
@@ -116,18 +118,21 @@ def korytarz(kolejka_in: list[Pasazer]):
 
             # omijamy overflow error
             if pasazer.id != kolejka[-1].id:
-                if pasazer.id < kolejka[pasazer.id+1].id and (pasazer.stan == stoi or pasazer.stan == siada) and 0.2 > (pasazer.pozycja - kolejka[pasazer.id+1].pozycja):
-                    # pasazer stoi jesli pasazer przed nim stoi
-                    kolejka[pasazer.id+1].stan = stoi
-                    kolejka[pasazer.id+1].czas_zakonczenia_akcji = pasazer.czas_zakonczenia_akcji
-                    kolejka[pasazer.id+1].chod_aktualna = pasazer.chod_aktualna
+                if pasazer.id != None:
+                    if kolejka[pasazer.id+1].id != None:
+                        if pasazer.id < kolejka[pasazer.id+1].id and (pasazer.stan == stoi or pasazer.stan == siada) and 0.2 > (pasazer.pozycja - kolejka[pasazer.id+1].pozycja):
+                            # pasazer stoi jesli pasazer przed nim stoi
+                            # print("Stoi pasazer dziedziczny")
+                            kolejka[pasazer.id+1].stan = stoi
+                            kolejka[pasazer.id+1].czas_zakonczenia_akcji = pasazer.czas_zakonczenia_akcji
+                            kolejka[pasazer.id+1].chod_aktualna = pasazer.chod_aktualna
         time_pass += delta_t
     return time_pass
 
 
 if __name__ == "__main__":
     # TEST
-    kolejka = zapelnij_kolejke(150, 9, 6, Pulse)
+    kolejka = zapelnij_kolejke(150, 1.1, 6, Pulse)
     temp = korytarz(kolejka)
     print(temp)
     print(f'{temp/(60*delta_t)} minut')

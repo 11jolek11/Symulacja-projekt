@@ -134,7 +134,7 @@ if __name__ == "__main__":
     start = time.perf_counter()
     test = Worker(150,1,6,0.5, 0.005, Pulse)
     print(test.simulate())
-    print(time.perf_counter() - start)
+    # print(time.perf_counter() - start)
     # app = QApplication(sys.argv)
     # window = MainWindow()
     # window.show()

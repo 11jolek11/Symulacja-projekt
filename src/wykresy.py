@@ -10,8 +10,9 @@ import plotly.express as px
 def simulate_and_drop_to_excel(file_name):
     queues = [Fifo, PlaceFirst, WindowFirst, RowFirst, BestFirst, Pulse ]
     plane_capacities = [50,100,150]
-    avg_walking_speeds =[6+_ for _ in range(5)]
-    avg_get_up_speeds = [3+_ for _ in range(3)]
+    jumps = [0.1,0.2,0.3,0.4,0.5]
+    avg_walking_speeds =[1+_ for _ in jumps]
+    avg_get_up_speeds = [6+_ for _ in jumps]
     output_list = [[],[],[],[],[]]
     fifo_df = pd.DataFrame()
     place_first_df = pd.DataFrame()
@@ -30,7 +31,7 @@ def simulate_and_drop_to_excel(file_name):
                     output_list[2].append(avg_get_up_speed)
                     output_list[3].append(avg_walking_speed)
                     output_list[4].append(Worker(plane_capacity,avg_walking_speed,avg_get_up_speed,0.5, 0.005, queue).simulate()/60)
-                    print(";)")
+        
         queue_data_frames[z] = pd.DataFrame(output_list).transpose()
         queue_data_frames[z].columns=["queue","number_of_ppl","avg_get_up_speed","avg_walking_speed","time"]
         print(f"done {queue.__name__}")

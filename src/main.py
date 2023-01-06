@@ -12,6 +12,7 @@ from scipy.stats import poisson
 from random import random
 
 
+
 def zdarzyl_sie_wypadek(prob):
     """
     Funckja decydująca o wypadku dla danego pasażera w danym czasie
@@ -42,8 +43,8 @@ class Worker(QObject):
             # print(len(passengers))
             time_elapsed += self.dt  # jezeli tutaj to reakcja pasazerow jest instant
             # jezli w for loop to pasazer ma swoj czas reakcji
-            time.sleep(self.interval)
-            x_positions = []
+            # time.sleep(self.interval)
+            # x_positions = []
             for passenger in passengers:
                 if zdarzyl_sie_wypadek(prob):
                     passenger.stan = 'stoi'
@@ -52,11 +53,11 @@ class Worker(QObject):
                 if passenger.stan == "siedzi":
                     passengers.remove(passenger)
                     
-                x_positions.append([passenger.x_pos, 0])
-            self.data.emit(passengers)
+                # x_positions.append([passenger.x_pos, 0])
+            # self.data.emit(passengers)
             # print(time_elapsed)
 
-        self.data.emit(passengers)
+        # self.data.emit(passengers)
         return time_elapsed
 
 
@@ -130,8 +131,10 @@ class MainWindow(QMainWindow):
 
 
 if __name__ == "__main__":
+    start = time.perf_counter()
     test = Worker(150,1,6,0.5, 0.005, Pulse)
-    test.simulate()
+    print(test.simulate())
+    print(time.perf_counter() - start)
     # app = QApplication(sys.argv)
     # window = MainWindow()
     # window.show()

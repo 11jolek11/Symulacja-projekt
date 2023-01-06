@@ -12,7 +12,6 @@ from scipy.stats import poisson
 from random import random
 
 
-
 def zdarzyl_sie_wypadek(prob):
     """
     Funckja decydująca o wypadku dla danego pasażera w danym czasie
@@ -20,10 +19,12 @@ def zdarzyl_sie_wypadek(prob):
     """
     return prob >= random()
 
+
 class Worker(QObject):
     data = Signal(list)
 
-    def __init__(self,plane_capacity,avg_walking_speed,avg_get_up_speed, dt: float = 0.5, interval: float = 0.005, strategy=Fifo) -> None:
+    def __init__(self, plane_capacity, avg_walking_speed, avg_get_up_speed, dt: float = 0.5, interval: float = 0.005,
+                 strategy=Fifo) -> None:
         super(Worker, self).__init__()
         self.dt = dt
         self.interval = interval
@@ -32,11 +33,12 @@ class Worker(QObject):
         self.avg_walking_speed = avg_walking_speed
         self.avg_get_up_speed = avg_get_up_speed
 
-    def simulate(self) -> None:
+    def simulate(self) -> float:
         prob = poisson.pmf(k=1, mu=0.00017)
 
         time_elapsed = 0
-        passengers: list[Pasazer] = self.strategy(self.plane_capacity, self.avg_walking_speed, self.avg_get_up_speed, prob)
+        passengers: list[Pasazer] = self.strategy(self.plane_capacity, self.avg_walking_speed, self.avg_get_up_speed,
+                                                  prob)
         # np.random.shuffle(Pasazer.passengers)
         # print(passengers)
         while passengers:
@@ -52,12 +54,41 @@ class Worker(QObject):
                 passenger.move(self.dt)
                 if passenger.stan == "siedzi":
                     passengers.remove(passenger)
-                    
+
                 # x_positions.append([passenger.x_pos, 0])
             # self.data.emit(passengers)
             # print(time_elapsed)
 
         # self.data.emit(passengers)
+        return time_elapsed
+
+    def symulacja2(self) -> float:
+        prob = poisson.pmf(k=1, mu=0.00017)
+
+        time_elapsed = 0
+        passengers: list[Pasazer] = self.strategy(self.plane_capacity, self.avg_walking_speed, self.avg_get_up_speed,
+                                                  prob)
+        # np.random.shuffle(Pasazer.passengers)
+        # print(passengers)
+        while passengers:
+            # print(len(passengers))
+            time_elapsed += self.dt  # jezeli tutaj to reakcja pasazerow jest instant
+            # jezli w for loop to pasazer ma swoj czas reakcji
+            time.sleep(self.interval)
+            x_positions = []
+            for passenger in passengers:
+                if zdarzyl_sie_wypadek(prob):
+                    passenger.stan = 'stoi'
+                    passenger.czas_akcji += 30
+                passenger.move(self.dt)
+                if passenger.stan == "siedzi":
+                    passengers.remove(passenger)
+
+                x_positions.append([passenger.x_pos, 0])
+            self.data.emit(passengers)
+            # print(time_elapsed)
+
+        self.data.emit(passengers)
         return time_elapsed
 
 
@@ -73,10 +104,10 @@ class MainWindow(QMainWindow):
         self.x_positions = []
         # symulacja
         self.thread = QThread()
-        self.worker = Worker(0.5, 0.01, strategy=Fifo)
+        self.worker = Worker(150, 1, 6, 0.5, 0.005, Fifo)
         self.worker.data.connect(self.update_positions)
         self.worker.moveToThread(self.thread)
-        self.thread.started.connect(self.worker.simulate)  # type: ignore
+        self.thread.started.connect(self.worker.symulacja2)  # type: ignore
         self.thread.finished.connect(self.thread.deleteLater)  # type: ignore
         self.thread.start()
         # self.setCentralWidget(self.circle_widget)
@@ -99,10 +130,16 @@ class MainWindow(QMainWindow):
         multiplier = 20
         shift = 5
         for passenger in self.x_positions:
-            if passenger.stan == 'temp':
+            if passenger.stan == 'siedzi':
+                continue
+            if passenger.stan == 'chodzi' or passenger.stan == 'temp':
                 painter.setPen(QPen(Qt.green, 4, Qt.SolidLine))
                 painter.setBrush(QBrush(Qt.green, Qt.SolidPattern))
+            elif passenger.stan == 'siada':
+                painter.setPen(QPen(Qt.red, 4, Qt.SolidLine))
+                painter.setBrush(QBrush(Qt.red, Qt.SolidPattern))
             else:
+                print(passenger.stan)
                 painter.setPen(QPen(Qt.red, 4, Qt.SolidLine))
                 painter.setBrush(QBrush(Qt.red, Qt.SolidPattern))
             x_pos = passenger.x_pos
@@ -113,7 +150,7 @@ class MainWindow(QMainWindow):
             x_pos = multiplier * x_pos
             # print(x_pos)
             if x_pos < 0:
-                y_pos = height * 0.5 - abs(x_pos)
+                y_pos = height * 0.5 - abs(x_pos/2)
                 x_pos = shift * 0.5
                 # print(y_pos)
             else:
@@ -132,10 +169,10 @@ class MainWindow(QMainWindow):
 
 if __name__ == "__main__":
     start = time.perf_counter()
-    test = Worker(150,1,6,0.5, 0.005, Pulse)
-    print(test.simulate())
+    # test = Worker(150, 1, 6, 0.5, 0.005, Pulse)
+    # print(test.simulate())
     # print(time.perf_counter() - start)
-    # app = QApplication(sys.argv)
-    # window = MainWindow()
-    # window.show()
-    # sys.exit(app.exec())
+    app = QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
+    sys.exit(app.exec())

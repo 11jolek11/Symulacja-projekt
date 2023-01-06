@@ -118,10 +118,10 @@ class Pasazer(Samolot):
         try:
             index = self.passengers.index(self)  # duzo czasu to zajmuje
             if index - 1 < 0:
-                return self.czas_akcji <= 0 # True
+                return self.czas_akcji <= 0  # True
             return self.passengers[index - 1].x_pos - (self.x_pos + dt * self.chod_pr) > 0.3
         except (IndexError, ValueError):
-            return self.czas_akcji <= 0 # True
+            return self.czas_akcji <= 0  # True
 
     def __str__(self):
         return f'{self.idx}: {self.miejsce} {self.stan}, {self.x_pos}, {self.seat_at}, {self.czas_akcji}'

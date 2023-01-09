@@ -139,9 +139,10 @@ class MainWindow(QMainWindow):
                 painter.setPen(QPen(Qt.red, 4, Qt.SolidLine))
                 painter.setBrush(QBrush(Qt.red, Qt.SolidPattern))
             else:
-                print(passenger.stan)
-                painter.setPen(QPen(Qt.red, 4, Qt.SolidLine))
-                painter.setBrush(QBrush(Qt.red, Qt.SolidPattern))
+                # print(passenger.stan)
+                # Obsługa stanu stoi
+                painter.setPen(QPen(Qt.cyan, 4, Qt.SolidLine))
+                painter.setBrush(QBrush(Qt.cyan, Qt.SolidPattern))
             x_pos = passenger.x_pos
             # 30m = width
             # # max x_pos = 30

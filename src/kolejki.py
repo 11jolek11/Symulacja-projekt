@@ -4,7 +4,8 @@ from numpy.random import shuffle
 from random import uniform
 
 const_miejsca = 150
-const_dystans = 70.0
+# const_dystans = 70.0
+const_dystans = 0.0
 
 def Fifo(ilosc, chod_sr, wstw_sr, prob):
     """
